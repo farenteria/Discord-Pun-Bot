@@ -1,5 +1,6 @@
 var Discord = require('discord.io');
 var logger = require('winston');
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var auth = require('./auth.json');
 
 // Configure logger settings
@@ -22,6 +23,7 @@ bot.on('ready', function (evt) {
     logger.info(bot.username + ' - (' + bot.id + ')');
 });
 
+// message will be the command user types in
 bot.on('message', function (user, userID, channelID, message, evt) {
     // Our bot needs to know if it will execute a command
     // It will listen for messages that will start with `!`
@@ -39,6 +41,21 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
             break;
             // Just add any case commands if you want to..
+            // we will be using icanhazdadjoke for our puns
+            case 'pun':
+                makeRequest();
+            break;
          }
      }
 });
+
+function makeRequest(){
+    var httpRequest = new XMLHttpRequest();
+
+    if(!httpRequest){
+        logger.warning("httpRequest instance failed");
+        return false;
+    }
+
+    logger.info("Keep going!");
+}
