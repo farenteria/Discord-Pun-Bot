@@ -37,8 +37,8 @@ logger.add(logger.transports.Console, {
 logger.level = 'debug';
 
 // Job schedulers
-var nightlyJob = schedule.scheduleJob({hour: 0}, addNewJoke);
-var hourlyJob = schedule.scheduleJob({minute: 0}, replaceJoke);
+var nightlyJob = scheduler.scheduleJob({hour: 0}, addNewJoke);
+var hourlyJob = scheduler.scheduleJob({minute: 0}, replaceJoke);
 
 // Initialize Discord Bot
 var bot = new Discord.Client({
