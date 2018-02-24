@@ -3,6 +3,14 @@ var logger = require('winston');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var auth = require('./auth.json');
 
+var joke;
+
+// Used to request the best of puns
+var httpRequest = new XMLHttpRequest();
+
+// custom user-agent header
+var userAgentHeader = "User-Agent: farenteria (https://github.com/farenteria/Discord-Pun-Bot)";
+
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(logger.transports.Console, {
@@ -33,29 +41,43 @@ bot.on('message', function (user, userID, channelID, message, evt) {
        
         args = args.splice(1);
         switch(cmd) {
-            // !ping
-            case 'ping':
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'Pong!'
-                });
-            break;
-            // Just add any case commands if you want to..
             // we will be using icanhazdadjoke for our puns
             case 'pun':
                 makeRequest();
+                bot.sendMessage({
+                    to: channelID,
+                    message: joke
+                });
             break;
          }
      }
 });
 
 function makeRequest(){
-    var httpRequest = new XMLHttpRequest();
-
     if(!httpRequest){
         logger.warning("httpRequest instance failed");
         return false;
     }
 
-    logger.info("Keep going!");
+    httpRequest.onreadystatechange = retrieveContents;
+    httpRequest.open("GET", "https://icanhazdadjoke.com/slack");
+    httpRequest.responseType = "json";
+    httpRequest.send();
+}
+
+// this will be called once we receive the response
+function retrieveContents(){
+    // 4 == DONE, but we're not using a browser XMLHttp, so we must use 4 to compare
+    if(httpRequest.readyState === 4){
+        if(httpRequest.status === 200){
+           var parsed = JSON.parse(httpRequest.responseText);
+           joke = parsed.attachments[0].text;
+        }else{
+            logger.warning("There was a problem with the request");
+        }
+    }
+}
+
+function printJoke(){
+
 }
