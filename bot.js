@@ -1,6 +1,7 @@
-var Discord = require('discord.io');
-var logger = require('winston');
+var Discord = require("discord.io");
+var logger = require("winston");
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var scheduler = require("node-schedule");
 
 var joke;
 
@@ -35,6 +36,10 @@ logger.add(logger.transports.Console, {
 
 logger.level = 'debug';
 
+// Job schedulers
+var nightlyJob = schedule.scheduleJob({hour: 0}, addNewJoke);
+var hourlyJob = schedule.scheduleJob({minute: 0}, replaceJoke);
+
 // Initialize Discord Bot
 var bot = new Discord.Client({
    token: process.env.TOKEN,
@@ -66,8 +71,8 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     message: joke
                 });
             break;
-         }
-     }
+        }
+    }
 });
 
 function makeRequest(){
@@ -95,4 +100,16 @@ function retrieveContents(){
     }
 }
 
-//app.listen(process.env.PORT || 8080);
+// push new joke every day at midnight from website without removing any current jokes
+function addNewJoke(){
+    makeRequest();
+    jokes.push(joke);
+    logger.info("New joke has been added to end of array");
+}
+
+// randomly replace a joke with one from the website
+function replaceJoke(){
+    makeRequest();
+    jokes[Math.floor(Math.random()*jokes.length)] = joke;
+    logger.info("New joke has replaced a random one");
+}
