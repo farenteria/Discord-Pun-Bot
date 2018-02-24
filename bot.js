@@ -5,6 +5,23 @@ var auth = require('./auth.json');
 
 var joke;
 
+// where we will store all of our initial jokes
+var jokes = [
+    "A man was caught stealing in a supermarket today while balanced on the shoulders of a couple of vampires. He was charged with shoplifting on two counts.",
+    "Why can't a bicycle stand on its own? It's two-tired.",
+    "A police officer caught two kids playing with a firework and a car battery. He charged one and let the other one off.",
+    "Did you hear the one about the guy with the broken hearing aid? Neither did he.",
+    "I'm practicing for a bug-eating contest and I've got butterflies in my stomach.",
+    "Why did the barber win the race? He took a short cut.",
+    "Our wedding was so beautiful, even the cake was in tiers.",
+    "Milk is also the fastest liquid on earth – its pasteurized before you even see it",
+    "Why did the Clydesdale give the pony a glass of water? Because he was a little horse!",
+    "Mountains aren't just funny, they are hill areas",
+    "To the guy who invented zero... thanks for nothing.",
+    "What is this movie about? It is about 2 hours long.",
+    "What do you call a cow with two legs? Lean beef.",
+];
+
 // Used to request the best of puns
 var httpRequest = new XMLHttpRequest();
 
@@ -41,9 +58,10 @@ bot.on('message', function (user, userID, channelID, message, evt) {
        
         args = args.splice(1);
         switch(cmd) {
-            // we will be using icanhazdadjoke for our puns
+            // get a random joke from our array of BEST JOKES
             case 'pun':
-                makeRequest();
+                joke = jokes[Math.floor(Math.random()*jokes.length)];
+
                 bot.sendMessage({
                     to: channelID,
                     message: joke
