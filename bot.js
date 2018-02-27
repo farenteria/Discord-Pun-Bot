@@ -77,7 +77,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 function makeRequest(){
     if(!httpRequest){
-        logger.warning("httpRequest instance failed");
+        logger.info("httpRequest instance failed");
         return false;
     }
 
@@ -95,7 +95,7 @@ function retrieveContents(){
            var parsed = JSON.parse(httpRequest.responseText);
            joke = parsed.attachments[0].text;
         }else{
-            logger.warning("There was a problem with the request");
+            logger.info("There was a problem with the request");
         }
     }
 }
