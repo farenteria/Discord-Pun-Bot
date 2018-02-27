@@ -94,6 +94,7 @@ function retrieveContents(){
         if(httpRequest.status === 200){
            var parsed = JSON.parse(httpRequest.responseText);
            joke = parsed.attachments[0].text;
+           logger.info("succesfully got joke");
         }else{
             logger.info("There was a problem with the request");
         }
